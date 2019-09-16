@@ -39,14 +39,14 @@ class SleepTrackerViewModel(
     private var viewModelJob = Job()
 
     /**
-     * A [CoroutineScope] keeps track of all coroutines started by this ViewModel.
+     * A CoroutineScope keeps track of all coroutines started by this ViewModel.
      *
-     * Because we pass it [viewModelJob], any coroutine started in this uiScope can be cancelled
+     * Because we pass it viewModelJob, any coroutine started in this uiScope can be cancelled
      * by calling `viewModelJob.cancel()`
      *
-     * By default, all coroutines started in uiScope will launch in [Dispatchers.Main] which is
+     * By default, all coroutines started in uiScope will launch in Dispatchers.Main which is
      * the main thread on Android. This is a sensible default because most coroutines started by
-     * a [ViewModel] update the UI after performing some processing.
+     * a ViewModel update the UI after performing some processing.
      */
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -96,12 +96,13 @@ class SleepTrackerViewModel(
         get() = _showSnackbarEvent
 
     /**
-     * Variable that tells the Fragment to navigate to a specific [SleepQualityFragment]
+     * Variable that tells the Fragment to navigate to a specific SleepQualityFragment
      *
      * This is private because we don't want to expose setting this value to the Fragment.
      */
 
     private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
+
     /**
      * Call this immediately after calling `show()` on a toast.
      *
@@ -112,20 +113,32 @@ class SleepTrackerViewModel(
     fun doneShowingSnackbar() {
         _showSnackbarEvent.value = false
     }
+
     /**
-     * If this is non-null, immediately navigate to [SleepQualityFragment] and call [doneNavigating]
+     * If this is non-null, immediately navigate to SleepQualityFragment and call doneNavigating
      */
     val navigateToSleepQuality: LiveData<SleepNight>
         get() = _navigateToSleepQuality
 
     /**
-     * Call this immediately after navigating to [SleepQualityFragment]
+     * Call this immediately after navigating to SleepQualityFragment
      *
      * It will clear the navigation request, so if the user rotates their phone it won't navigate
      * twice.
      */
     fun doneNavigating() {
         _navigateToSleepQuality.value = null
+    }
+
+    private val _navigateToSleepDataQuality = MutableLiveData<Long>()
+    val navigateToSleepDataQuality: LiveData<Long> get() = _navigateToSleepDataQuality
+
+    fun onSleepNightClicked(id: Long) {
+        _navigateToSleepDataQuality.value = id
+    }
+
+    fun onSleepDataQualityNavigated() {
+        _navigateToSleepDataQuality.value = null
     }
 
     init {
